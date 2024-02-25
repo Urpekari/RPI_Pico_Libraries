@@ -1,6 +1,11 @@
 add_executable(shiftReg
-        src/shiftReg.c
+        src/SHIFTREG.cpp
+        src/example.cpp
         )
+
+target_include_directories(shiftReg PUBLIC
+inc
+)
 
 # pull in common dependencies
 target_link_libraries(shiftReg pico_stdlib)

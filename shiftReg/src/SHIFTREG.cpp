@@ -1,15 +1,24 @@
+#include "SHIFTREG.h"
+#include "hardware/gpio.h"
 #include "pico/stdlib.h"
 
-int main() {
+SHIFTREG::SHIFTREG(uint8_t dataPin, uint8_t latchPin, uint8_t clkPin)
+{
+  this -> dataPin = dataPin;
+  this -> latchPin = latchPin;
+  this -> clkPin = clkPin;
+}
+
+void SHIFTREG::sendTheThing() {
 #ifndef PICO_DEFAULT_LED_PIN
 #warning blink example requires a board with a regular LED
 #else
   //Pin 14 on the iC
-  uint8_t dataPin = 18;
+  //uint8_t dataPin = 18;
   //Pin 12 on the iC
-  uint8_t latchPin = 19;
+  //uint8_t latchPin = 19;
   //Pin 11 on the iC
-  uint8_t clkPin = 20;
+  //uint8_t clkPin = 20;
   
   //Debug:
   const uint LED_PIN = PICO_DEFAULT_LED_PIN;
@@ -28,21 +37,8 @@ int main() {
   gpio_set_dir(latchPin, GPIO_OUT);
   gpio_set_dir(clkPin, GPIO_OUT);
   
-  //while (true) {
-  //    gpio_put(LED_PIN, 1);
-  //    sleep_ms(250);
-  //    gpio_put(LED_PIN, 0);
-  //    sleep_ms(250);
-  //}
-  
   while(true){
   
-//    gpio_put(LED_PIN, 1);
-//    sleep_ms(250);
-//    gpio_put(LED_PIN, 0);
-//    sleep_ms(250);
-  
-    sleep_ms(200);
     gpio_put(LED_PIN, 1);
     
     if(bitValue == 0){
@@ -65,14 +61,12 @@ int main() {
 
       gpio_put(dataPin, bitValue);
       
-      sleep_ms(50);
       gpio_put(clkPin, 1);
-      sleep_ms(50);
       gpio_put(clkPin,0); 
     }
     gpio_put(latchPin, 1);
     
-    sleep_ms(200);
+    sleep_ms(20);
     gpio_put(LED_PIN, 0);
   
   }
