@@ -14,8 +14,15 @@ int main(){
 
   SHIFTREG shift(18, 19, 20);
   
-  shift.sendTheThing();
-
+  uint8_t data = 0;
+  
+  while(true){
+    
+    for(data = 0; data<255; data++){
+      shift.sendTheThing(data); 
+      sleep_ms(100);
+    }    
+  }
   #endif
 
 }

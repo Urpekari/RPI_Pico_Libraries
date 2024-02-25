@@ -18,7 +18,7 @@ public:  //Vars
 private: //Funcs
 
 public:  //Funcs
-  void sendTheThing();
+  void sendTheThing(uint8_t data);
 
 
 public:  //Constructor

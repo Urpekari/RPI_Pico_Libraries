@@ -1,6 +1,7 @@
 #include "SHIFTREG.h"
 #include "hardware/gpio.h"
 #include "pico/stdlib.h"
+#include "cstdio"
 
 SHIFTREG::SHIFTREG(uint8_t dataPin, uint8_t latchPin, uint8_t clkPin)
 {
@@ -9,7 +10,7 @@ SHIFTREG::SHIFTREG(uint8_t dataPin, uint8_t latchPin, uint8_t clkPin)
   this -> clkPin = clkPin;
 }
 
-void SHIFTREG::sendTheThing() {
+void SHIFTREG::sendTheThing(uint8_t data) {
 #ifndef PICO_DEFAULT_LED_PIN
 #warning blink example requires a board with a regular LED
 #else
@@ -22,9 +23,8 @@ void SHIFTREG::sendTheThing() {
   
   //Debug:
   const uint LED_PIN = PICO_DEFAULT_LED_PIN;
-  
-  //TODO: Replace with actual things
-  uint8_t bitValue = 0;
+                
+  uint8_t bits[8] = {0,0,0,0,0,0,0,0};
   
   gpio_init(LED_PIN);
   gpio_set_dir(LED_PIN, GPIO_OUT);
@@ -37,39 +37,32 @@ void SHIFTREG::sendTheThing() {
   gpio_set_dir(latchPin, GPIO_OUT);
   gpio_set_dir(clkPin, GPIO_OUT);
   
-  while(true){
+  gpio_put(LED_PIN, 1);
   
-    gpio_put(LED_PIN, 1);
-    
-    if(bitValue == 0){
-      bitValue = 1;
-    }
-    else{
-      bitValue = 0;
-    }
-    
-    gpio_put(latchPin, 0);
-    for(uint8_t i = 0; i<8; i++){
-      //TODO: REMOVE WHEN ACTUAL THINGS ARE IMPLEMENTED! REPLACE WITH "READ NEXT BIT"
-      if(bitValue == 0){
-        bitValue = 1;
-      }
-      else{
-        bitValue = 0;
-      }
-      //TODO: **ABOVE** REMOVE WHEN ACTUAL THINGS ARE IMPLEMENTED! REPLACE WITH "READ NEXT BIT"
-
-      gpio_put(dataPin, bitValue);
-      
-      gpio_put(clkPin, 1);
-      gpio_put(clkPin,0); 
-    }
-    gpio_put(latchPin, 1);
-    
-    sleep_ms(20);
-    gpio_put(LED_PIN, 0);
+  printf("Input data: %d\n");
   
+  gpio_put(latchPin, 0);
+  
+  for(uint8_t j = 0; j<8; j++){
+  
+    // 1 << (i%8)  <- That's a mask
+    
+    // We and the mask and the data byte together
+    // The last >>(i%8) shifts the bit to the least significant bit of a byte in the bits[] array.
+    // The smallest variable we can make is a byte!
+    
+    bits[j] = ((1 << (j%8)) & (data))>>(j%8);
   }
+  
+  for(uint8_t i = 0; i<8; i++){
+  
+    gpio_put(dataPin, bits[i]);
+    
+    gpio_put(clkPin, 1);
+    gpio_put(clkPin,0); 
+  }
+  gpio_put(latchPin, 1);
+  gpio_put(LED_PIN, 0);
   
 #endif
 }
