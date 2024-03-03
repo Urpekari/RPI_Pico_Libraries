@@ -3,7 +3,7 @@
 SN74HC595 shift register controller
 
 ## Parameters
-###The main constructor takes 3 parameters:
+### The main constructor takes 3 parameters:
 
 **dataPin** = Pin 14 of the IC
 This determines what goes on the outputs.
