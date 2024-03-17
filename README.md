@@ -10,4 +10,4 @@ SN74HC959N Shift register controller. It should be compatible with most if not a
 
 Stepper control via STSPIN820 board/controller. It should be compatible with most if not all A4988-like stepper motor drivers
 
-It does NOT *yet* have "Mode" control (full step, half step, quarter step...) as our use-case deals with this with hard-wired and jumper-based connections.
+It does NOT *yet* have "Mode" control (full step, half step, quarter step...) as our use-case deals with this via hard-wired and jumper-based connections.
