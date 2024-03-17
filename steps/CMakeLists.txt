@@ -1,8 +1,13 @@
 project(step)
 
 add_executable(step
-        step.c
+        src/STEPS.cpp
+        src/example.cpp
         )
+
+target_include_directories(step PUBLIC
+inc
+)
 
 set(CMAKE_CXX_STANDARD 17)
 
