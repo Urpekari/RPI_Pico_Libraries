@@ -11,7 +11,7 @@ target_include_directories(servo PUBLIC
 set(CMAKE_CXX_STANDARD 17)
 
 # pull in common dependencies
-target_link_libraries(servo pico_stdlib)
+target_link_libraries(servo pico_stdlib hardware_pwm)
 
 # create map/bin/hex file etc.
 pico_add_extra_outputs(servo)
