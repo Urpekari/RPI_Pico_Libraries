@@ -61,7 +61,7 @@ float PRESS::convert_temp(){
     float tmp2=tmptlo+tmp;
     return (tmp2/100);
 }
-PRESS::read_temp(){
+void PRESS::read_temp(){
 
     i2c_write_blocking(i2c_default, ADDRESS, &REG_T_OUT_L, 1, true);
     i2c_read_blocking(i2c_default, ADDRESS, &tmptlo, 1, false);
@@ -69,7 +69,7 @@ PRESS::read_temp(){
     i2c_write_blocking(i2c_default, ADDRESS, &REG_T_OUT_H, 1, true);
     i2c_read_blocking(i2c_default, ADDRESS, &tmpthi, 1, false);
 }
-PRESS::read_press(){
+void PRESS::read_press(){
 
     i2c_write_blocking(i2c_default, ADDRESS, &REG_P_OUT_XL, 1, true);
     i2c_read_blocking(i2c_default, ADDRESS, &tmpplo, 1, false);
