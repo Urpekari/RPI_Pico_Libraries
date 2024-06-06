@@ -35,8 +35,8 @@ class PRESS{
         void read_temp();
     public:
 
-        float convert_press(uint8_t press_hi,uint8_t press_med, uint8_t press_lo);
-        float convert_temp(uint8_t temp_hi,uint8_t temp_lo);
+        float convert_press();
+        float convert_temp();
         void configure();
     
     public:
