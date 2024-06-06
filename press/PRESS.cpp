@@ -49,19 +49,19 @@ void PRESS::configure(){
 float PRESS::convert_press(){
 
     read_press();
-    float tmp1=press_hi<<16;
-    float tmp2=press_med<<8;
-    float tmpp=press_lo+tmp1+tmp2;
+    float tmp1=tmpphi<<16;
+    float tmp2=tmppme<<8;
+    float tmpp=tmpplo+tmp1+tmp2;
     return(tmpp/4096);
 }
 float PRESS::convert_temp(){
 
     read_temp();
-    float tmp=temp_hi<<8;
-    float tmp2=temp_lo+tmp;
+    float tmp=tmpthi<<8;
+    float tmp2=tmptlo+tmp;
     return (tmp2/100);
 }
-PRESS::read_press(){
+PRESS::read_temp(){
 
     i2c_write_blocking(i2c_default, ADDRESS, &REG_T_OUT_L, 1, true);
     i2c_read_blocking(i2c_default, ADDRESS, &tmptlo, 1, false);
@@ -69,7 +69,7 @@ PRESS::read_press(){
     i2c_write_blocking(i2c_default, ADDRESS, &REG_T_OUT_H, 1, true);
     i2c_read_blocking(i2c_default, ADDRESS, &tmpthi, 1, false);
 }
-PRESS::read_temp(){
+PRESS::read_press(){
 
     i2c_write_blocking(i2c_default, ADDRESS, &REG_P_OUT_XL, 1, true);
     i2c_read_blocking(i2c_default, ADDRESS, &tmpplo, 1, false);
