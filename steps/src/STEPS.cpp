@@ -1,3 +1,6 @@
+//v1.1
+//2024-06-07
+
 #include "pico/stdlib.h"
 #include "STEPS.h"
 //Full constructor for when we need just one stepper motor and to control it directly
@@ -49,6 +52,11 @@ void STEPS::setDir(bool dirTarget){
   if(stepperStepDirPin >0){
     gpio_put(stepperStepDirPin, dirTarget);
   }
+}
+
+//Nothing in the documentation says I can't use get on an output pin
+bool STEPS::getDir(){
+  return(gpio_get(stepperStepDirPin));
 }
 
 //Pulls the enable pin HIGH -> Prevents the motor from moving.

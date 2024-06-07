@@ -1,3 +1,6 @@
+//v1.0
+//2024-06-07
+
 #include "SHIFTREG.h"
 #include "hardware/gpio.h"
 #include "pico/stdlib.h"

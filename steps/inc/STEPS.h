@@ -1,3 +1,6 @@
+//v1.1
+//2024-06-07
+
 #ifndef __STEPS_H_
 #define __STEPS_H_
 
@@ -29,6 +32,7 @@ class STEPS
   void stop(void);
   void start(void);
   void setDir(bool dirTarget);
+  bool getDir(void);
 
   public:   //CONSTRUCTOR
   //For single-motor controls
@@ -36,8 +40,7 @@ class STEPS
   
   //For multiple-motor control. You only really get access to the clock here, the rest should be handled by the shift register!
   STEPS(uint8_t stepperStepClkPin, uint8_t stepLength);
-  
-  //~SHIFTREG();
+
 };
 
 #endif

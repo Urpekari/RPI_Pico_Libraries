@@ -1,3 +1,6 @@
+//v1.0
+//2024-06-07
+
 #ifndef __SHIFTREG_H_
 #define __SHIFTREG_H_
 

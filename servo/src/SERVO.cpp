@@ -1,3 +1,6 @@
+//v1.0
+//2024-06-07
+
 #include <SERVO.h>
 #include "pico/stdlib.h"
 #include "stdio.h"
