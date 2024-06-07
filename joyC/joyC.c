@@ -7,6 +7,11 @@
 #include "pico/binary_info.h"
 #include "hardware/i2c.h"
 
+
+//Prototypes
+void readJoy(uint8_t* buffer, uint8_t* addresses);
+void drawRGB(uint8_t channel, uint8_t intensity);
+
 //I2C address
 #define I2Caddr 0x38
 
@@ -38,6 +43,9 @@
 
 int main(){
 
+  uint8_t joyPos[4];
+  uint8_t addresses[4] = {0x60, 0x61, 0x62, 0x63};
+
   uint8_t buffer;
 
   stdio_init_all();
@@ -51,14 +59,38 @@ int main(){
   
   while(true){
   
-    buffer = LXAddr;
-    i2c_write_blocking(i2c1, I2Caddr, &buffer, sizeof(buffer), false);
-    printf("Sent: %d\t", buffer);
-    i2c_read_blocking(i2c1, I2Caddr, &buffer, sizeof(buffer), false);
-    printf("Received: %d \n", buffer);
+    readJoy(joyPos, addresses);
+    drawRGB(0, 255);
+    printf("Received: %d %d %d %d \n", joyPos[0], joyPos[1], joyPos[2], joyPos[3]);
     
-    sleep_ms(250);
+  }
+  return(0);
+}
+
+void readJoy(uint8_t* buffer, uint8_t* addresses){
+  for(int i = 0; i<4; i++){
+    i2c_write_blocking(i2c1, I2Caddr, (addresses + i), sizeof(uint8_t), false);
+    i2c_read_blocking(i2c1, I2Caddr, (buffer + i), sizeof(uint8_t), false);
+    sleep_ms(50);    
   }
   
-  return(0);
+}
+
+//Does NOT work, I have no clue about how to control the LEDs
+//With the little battery in them AND the switchy on AND something coming on +3.3V they light up based depending on joystick angle and travel
+
+void drawRGB(uint8_t channel, uint8_t intensity){
+
+  uint8_t rgb = 0x21;
+  
+  uint8_t rgbVal[3];
+  rgbVal[channel] = intensity;
+  
+  printf("%d %d %d \n", rgbVal[0], rgbVal[1], rgbVal[2]);
+
+  i2c_write_blocking(i2c1, I2Caddr, &rgb, sizeof(uint8_t), false);
+  i2c_read_blocking(i2c1, I2Caddr, &rgbVal[0], sizeof(uint8_t), false);
+
+  printf("%d %d %d \n", rgbVal[0], rgbVal[1], rgbVal[2]);
+
 }
