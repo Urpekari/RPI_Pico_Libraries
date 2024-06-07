@@ -5,6 +5,13 @@ A number of libraries we've made in order to control all the components of any v
 ## Http-webserver
 Webserver using the lwIP stack for Raspberry Pi Pico W.
 
+## joyC
+Simple driver for joyC dual joystick kits. WIP
+
+Pinout:
+![1: 5V (VBUS/VSYS), 2: 3v3 OUT, 3: NO CONNECTION, 4: SDA, 5: NO CONNECTION, 6: SCL, 7: 5V (VBUS/VSYS), 8: GND](https://github.com/Urpekari/RPI_Pico_Libraries/blob/main/joyC/Pinout%20table.png?raw=true)
+
+
 ## press
 Reads temperature and pressure data from a [Sensor Name] sensor via I²C.
 
