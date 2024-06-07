@@ -8,8 +8,9 @@
 #include "PRESS.h"
 
 const char * ssi_tags[] = {"temp","press"};
-PRESS sensor;
 
+
+//TODO: NO SE PUEDEN MANDAR OBJETOS A LOS HANDLERS
 u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen){
     size_t printed;
     
@@ -34,7 +35,7 @@ u16_t ssi_handler(int iIndex, char *pcInsert, int iInsertLen){
     }
     return (u16_t)printed;
 }
-void ssi_init(){
+void ssi_init(PRESS sensor){
     sensor.configure();
 
     http_set_ssi_handler(ssi_handler, ssi_tags, LWIP_ARRAYSIZE(ssi_tags));

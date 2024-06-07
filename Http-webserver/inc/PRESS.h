@@ -8,8 +8,6 @@
 #include "hardware/i2c.h"
 #include <stdbool.h>
 
-
-#pragma once
 class PRESS{
 
     private:

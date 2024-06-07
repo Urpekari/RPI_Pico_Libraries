@@ -5,8 +5,12 @@
 #include "lwip/tcp.h"
 #include "hardware/i2c.h"
 #include "ssi.h"
+#include "PRESS.h"
 
 int main() {
+
+	PRESS sensor;
+
     stdio_init_all();
     
     if (cyw43_arch_init()) {
@@ -18,7 +22,7 @@ int main() {
     cyw43_arch_enable_ap_mode(ap_name, password, CYW43_AUTH_WPA2_AES_PSK);
     
     httpd_init();
-    ssi_init();
+    ssi_init(sensor);
     
     while(1);
         
