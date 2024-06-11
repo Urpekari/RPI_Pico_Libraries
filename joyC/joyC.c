@@ -76,21 +76,23 @@ void readJoy(uint8_t* buffer, uint8_t* addresses){
   
 }
 
-//Does NOT work, I have no clue about how to control the LEDs
-//With the little battery in them AND the switchy on AND something coming on +3.3V they light up based depending on joystick angle and travel
+//Working, it seems to illuminate only in the direction the joystick in pointing to
 
 void drawRGB(uint8_t channel, uint8_t intensity){
 
-  uint8_t rgb = 0x21;
+  uint8_t rgb = 0x20;
   
-  uint8_t rgbVal[3];
+  uint8_t rgbVal[4];
+  //First element provides the destination address
+  rgbVal[0]=rgb;
   rgbVal[channel] = intensity;
-  
-  printf("%d %d %d \n", rgbVal[0], rgbVal[1], rgbVal[2]);
-
-  i2c_write_blocking(i2c1, I2Caddr, &rgb, sizeof(uint8_t), false);
-  i2c_read_blocking(i2c1, I2Caddr, &rgbVal[0], sizeof(uint8_t), false);
-
-  printf("%d %d %d \n", rgbVal[0], rgbVal[1], rgbVal[2]);
+  //Extra, changes the remaining channels to 0 in order to see only either red, green or blue. Mixing colours will require this function to be deactivated
+  for(int i=1;i<=4;i++){
+    if(i!=channel){
+         rgbVal[i] = 0;
+    }
+  }
+  printf("%d %d %d \n", rgbVal[1], rgbVal[2], rgbVal[3]);
+  i2c_write_blocking(i2c1, I2Caddr, rgbVal, 4, false);
 
 }
