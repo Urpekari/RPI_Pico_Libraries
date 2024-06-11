@@ -17,7 +17,9 @@ PRESS::PRESS(uint8_t buf[2], uint8_t tempbuf[3], uint8_t tmptlo, uint8_t tmpthi,
 
     configure();
 }
-
+PRESS::PRESS(){
+    configure();
+}
 void PRESS::configure(){
     stdio_init_all();
 
