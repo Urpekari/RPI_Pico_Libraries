@@ -1,10 +1,12 @@
 project(joyC)
 
 add_executable(joyC
-    joyC.c
+    src/JOYC.cpp
+    src/example.cpp
     )
 
 target_include_directories(joyC PUBLIC
+	inc
 )
 
 set(CMAKE_CXX_STANDARD 17)

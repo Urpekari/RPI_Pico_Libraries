@@ -44,7 +44,7 @@ void drawRGB(uint8_t channel, uint8_t intensity);
 int main(){
 
   uint8_t joyPos[4];
-  uint8_t addresses[4] = {0x60, 0x61, 0x62, 0x63};
+  uint8_t addresses[4] = {LXAddr, LYAddr, RXAddr, RYAddr};
 
   uint8_t buffer;
 
