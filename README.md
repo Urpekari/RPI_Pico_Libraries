@@ -9,6 +9,7 @@ Webserver using the lwIP stack for Raspberry Pi Pico W.
 Simple driver for joyC dual joystick kits. WIP
 
 Pinout:
+
 ![1: 5V (VBUS/VSYS), 2: 3v3 OUT, 3: NO CONNECTION, 4: SDA, 5: NO CONNECTION, 6: SCL, 7: 5V (VBUS/VSYS), 8: GND](https://github.com/Urpekari/RPI_Pico_Libraries/blob/main/joyC/docs/Pinout%20table.png?raw=true)
 
 
