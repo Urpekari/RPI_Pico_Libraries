@@ -1,5 +1,5 @@
-//v1.0
-//2024-06-17
+//v1.1
+//2024-06-18
 
 #include <stdio.h>
 #include <string.h>
@@ -88,7 +88,7 @@
   //Y axis: Green (Yaw)
   //Z Axis: Blue (Depth)
   void JOYC::xyzGradient(){
-    
+    drawRGB(colorRamp(cartesian.Left0), colorRamp(cartesian.Left1), colorRamp(cartesian.Right1));	
   }
   
   void JOYC::drawRGB(uint8_t red, uint8_t green, uint8_t blue){
@@ -101,11 +101,20 @@
     if(red != NULL){
       rgbVal[1] = red;
     }
+    else if(red < 25){
+      rgbVal[1] = 0;
+    }
     if(green != NULL){
       rgbVal[2] = green;
     }
+    else if(green < 25){
+      rgbVal[2] = 0;
+    }
     if(blue != NULL){
       rgbVal[3] = blue;
+    }
+    else if(blue < 25){
+      rgbVal[3] = 0;
     }
     
     i2c_write_blocking(i2c1, I2Caddr, rgbVal, 4, false);
@@ -146,6 +155,7 @@
     polar.LButton = cartesian.LButton;
     polar.RButton = cartesian.RButton;
     
+    xyzGradient();
     
   }
   
