@@ -33,6 +33,7 @@
   
   /*
     Connections:
+    For i2c1
     JoyC Pin 6 (G26) to Raspberry Pi Pico I2C1 SCL (GP27)
     JoyC Pin 5 (G36) to Raspberry Pi Pico I2C1 SDA (GP26)
   */
@@ -42,6 +43,7 @@
   
   //SCL = GPIO 26
   //SDA = GPIO 27
+  
   JOYC::JOYC(uint8_t i2c, uint8_t SCL, uint8_t SDA){
   //Initialising 
     gpio_set_function(SCL, GPIO_FUNC_I2C);
@@ -52,6 +54,8 @@
     //TODO: GET THIS TO SWITCH I2C BUSES BASED ON THE i2c VARIABLE
     i2c_init(i2c1, 400*1000);
   }
+  
+  //Cute little silly lights
   
   //Literally the map function in arduino with fewer steps
   uint8_t JOYC::colorRamp(uint8_t potValIn){
@@ -107,6 +111,7 @@
     i2c_write_blocking(i2c1, I2Caddr, rgbVal, 4, false);
   }
   
+  //Actual functionality
   void JOYC::update(){
   
     uint8_t buffer[9];
