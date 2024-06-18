@@ -101,19 +101,19 @@
     if(red != NULL){
       rgbVal[1] = red;
     }
-    else if(red < 25){
+    else if(red < 35){
       rgbVal[1] = 0;
     }
     if(green != NULL){
       rgbVal[2] = green;
     }
-    else if(green < 25){
+    else if(green < 35){
       rgbVal[2] = 0;
     }
     if(blue != NULL){
       rgbVal[3] = blue;
     }
-    else if(blue < 25){
+    else if(blue < 35){
       rgbVal[3] = 0;
     }
     
@@ -140,10 +140,10 @@
     cartesian.RButton = 0;
     cartesian.LButton = 0;
     
-    if(buffer[8] & 0b00000001){
+    if(buffer[8] & 0x01){
       cartesian.RButton = 1;
     }
-    if(buffer[8] & 0b00000010){
+    if(buffer[8] & 0x10){
       cartesian.LButton = 1;
     }
 

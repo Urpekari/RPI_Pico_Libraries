@@ -43,8 +43,8 @@ https://m5stack.oss-cn-shenzhen.aliyuncs.com/resource/docs/schematic/Core/M5Stic
 | JOYC_PRESS_REG       | 0x64
 | ------------------------------------------------------------------------------------------------
 | press_reg[0]  |  R  |  LEFT AND RIGHT PRESS VALUE
-                           | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
-                           | R | R | R | R | R | R | LEFT | RIGHT |
+                           | 7 | 6 | 5 | 4 		| 3 | 2 | 1 | 0 	|
+                           | R | R | R | LEFT 	| R | R | R | RIGHT |
                            | LEFT: 
                                    Pressed: 1
                                    Released: 0
