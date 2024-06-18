@@ -84,8 +84,8 @@
     return( (absPos - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
 }
   
-  //X axis: Red (Forward/Backward motion)
-  //Y axis: Green (Yaw)
+  //X axis: Red (Yaw)
+  //Y axis: Green (Forward/Backward motion)
   //Z Axis: Blue (Depth)
   void JOYC::xyzGradient(){
     drawRGB(colorRamp(cartesian.Left0), colorRamp(cartesian.Left1), colorRamp(cartesian.Right1));	
@@ -155,6 +155,7 @@
     polar.LButton = cartesian.LButton;
     polar.RButton = cartesian.RButton;
     
+    //This enables the basic gradient with 3 axis for the LEDs and one useless axis
     xyzGradient();
     
   }

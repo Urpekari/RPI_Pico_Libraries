@@ -12,7 +12,7 @@ int main(){
   
   while(1){
     test = joyc.getCartesian();
-    printf("Received: %d %d %d %d\n", test.Left0, test.Left1, test.Right0, test.Right1);
+    printf("Received: %d %d %d %d - %d %d\n", test.Left0, test.Left1, test.Right0, test.Right1, test.LButton, test.RButton);
     sleep_ms(20);
   }
   
