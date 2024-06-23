@@ -1,5 +1,5 @@
-//v1.1
-//2024-06-18
+//v1.2
+//2024-06-23
 
 #include <stdio.h>
 #include <string.h>
@@ -24,9 +24,9 @@
   
   //Joysticks: Polar coordinates (P = Angle, R = Radius)
   #define LPAddr 0x70
-  #define LRAddr 0x71
-  #define RPAddr 0x72
-  #define RRAddr 0x73
+  #define LRAddr 0x72
+  #define RPAddr 0x74
+  #define RRAddr 0x76
 
   //Auxiliary buttons: 
   #define PBAddr 0x64
@@ -101,19 +101,19 @@
     if(red != NULL){
       rgbVal[1] = red;
     }
-    else if(red < 35){
+    else if(red < 25){
       rgbVal[1] = 0;
     }
     if(green != NULL){
       rgbVal[2] = green;
     }
-    else if(green < 35){
+    else if(green < 25){
       rgbVal[2] = 0;
     }
     if(blue != NULL){
       rgbVal[3] = blue;
     }
-    else if(blue < 35){
+    else if(blue < 25){
       rgbVal[3] = 0;
     }
     
@@ -121,51 +121,70 @@
   }
   
   //Actual functionality
-  void JOYC::update(){
-  
-    uint8_t buffer[9];
-  
-    for(int i = 0; i<9; i++){
-      i2c_write_blocking(i2c1, I2Caddr, (addresses + i), sizeof(uint8_t), false);
-      i2c_read_blocking(i2c1, I2Caddr, (buffer + i), sizeof(uint8_t), false); 
-    }
-    
-    // Update the cartesian interpretation
-    cartesian.Left0 = buffer[0];
-    cartesian.Left1 = buffer[1];
-    cartesian.Right0 = buffer[2];
-    cartesian.Right1 = buffer[3];
-    
-    //Update buttons every time, it's just easier and cleaner than checking all buttons
-    cartesian.RButton = 0;
-    cartesian.LButton = 0;
-    
-    if(buffer[8] & 0x01){
-      cartesian.RButton = 1;
-    }
-    if(buffer[8] & 0x10){
-      cartesian.LButton = 1;
-    }
+  void JOYC::update(bool type){
+    if(type==false){
+        uint8_t buffer[9];
+        for(int i = 0; i<9; i++){
+          i2c_write_blocking(i2c1, I2Caddr, (addresses + i), sizeof(uint8_t), false);
+          i2c_read_blocking(i2c1, I2Caddr, (buffer + i), sizeof(uint8_t), false); 
+        }
+        
+        // Update the cartesian interpretation
+        cartesian.Left0 = buffer[0];
+        cartesian.Left1 = buffer[1];
+        cartesian.Right0 = buffer[2];
+        cartesian.Right1 = buffer[3];
+        
+        //Update buttons every time, it's just easier and cleaner than checking all buttons
+        cartesian.RButton = 0;
+        cartesian.LButton = 0;
 
-    // Update the polar interpretation
-    polar.Left0 = buffer[4];
-    polar.Left1 = buffer[5];
-    polar.Right0 = buffer[6];
-    polar.Right1 = buffer[7];
-    polar.LButton = cartesian.LButton;
-    polar.RButton = cartesian.RButton;
+        if(buffer[8] & 0x01){
+          cartesian.RButton = 1;
+        }
+        if(buffer[8] & 0x10){
+          cartesian.LButton = 1;
+        }
+        
+        //This enables the basic gradient with 3 axis for the LEDs and one useless axis
+        xyzGradient();
     
-    //This enables the basic gradient with 3 axis for the LEDs and one useless axis
-    xyzGradient();
-    
+    }else{
+        uint16_t polar_buffer[4];
+        uint8_t tmp[2], button;
+        for(int i = 4; i<8; i++){
+          i2c_write_blocking(i2c1, I2Caddr, (addresses + i), sizeof(uint8_t), false);
+          i2c_read_blocking(i2c1, I2Caddr,tmp,2*sizeof(uint8_t), false);
+          polar_buffer[(i-4)] = tmp[0] << 8 | tmp[1];
+        }
+        i2c_write_blocking(i2c1, I2Caddr,&addresses[8], sizeof(uint8_t), false);
+        i2c_read_blocking(i2c1, I2Caddr,&button,sizeof(uint8_t), false);
+
+        //Update buttons every time, it's just easier and cleaner than checking all buttons
+        polar.RButton = 0;
+        polar.LButton = 0;
+
+        if(button & 0x01){
+         polar.RButton = 1;
+        }
+        if(button & 0x10){
+         polar.LButton = 1;
+        }
+
+        // Update the polar interpretation
+        polar.LAngle = polar_buffer[0];
+        polar.RAngle = polar_buffer[1];
+        polar.LRadius = polar_buffer[2];
+        polar.RRadius = polar_buffer[3];
+        }
   }
   
   outputs JOYC::getCartesian(){
-    update();
+    update(0);
     return cartesian;
   }
   
   outputs JOYC::getPolar(){
-    update();
+    update(1);
     return polar;
   }
