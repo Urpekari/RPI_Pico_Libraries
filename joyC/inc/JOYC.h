@@ -1,5 +1,5 @@
-//v1.1
-//2024-06-18
+//v1.2
+//2024-06-23
 
 #include <stdio.h>
 #include <string.h>
@@ -18,9 +18,9 @@
   
   //Joysticks: Polar coordinates (P = Angle, R = Radius)
   #define LPAddr 0x70
-  #define LRAddr 0x71
-  #define RPAddr 0x72
-  #define RRAddr 0x73
+  #define LRAddr 0x72
+  #define RPAddr 0x74
+  #define RRAddr 0x76
 
   //Auxiliary buttons: 
   #define PBAddr 0x64
@@ -33,6 +33,10 @@
     uint8_t Right1;
     bool LButton;
     bool RButton;
+    uint16_t LAngle;
+    uint16_t RAngle;
+    uint16_t LRadius;
+    uint16_t RRadius;
   };
 
 class JOYC{
@@ -45,7 +49,7 @@ class JOYC{
         struct outputs cartesian;
         struct outputs polar;
         //FUNCS
-        void update();
+        void update(bool type); // true==polar, false==cartesian
         void xyzGradient();
         uint8_t colorRamp(uint8_t potValIn);
         
@@ -57,11 +61,7 @@ class JOYC{
         
         //FUNCS
         struct outputs getCartesian();
-
-          //TODO: DOCUMENT
-          //FOR THE TIME BEING: TOP GEAR TOP TIP: **AVOID**
-          //LITERALLY NO CLUE WHAT THE DATA MEANS. The angle starts at Full left joystick, the radius might be a float.
-          struct outputs getPolar();
+        struct outputs getPolar();
           
         JOYC(uint8_t i2c, uint8_t SCL, uint8_t SDA);
         ~JOYC();
