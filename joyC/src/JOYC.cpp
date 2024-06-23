@@ -151,7 +151,7 @@
     
     }else{
         uint16_t polar_buffer[4];
-        uint8_t tmp[2], button;
+        uint8_t tmp[2], button; 
         for(int i = 4; i<8; i++){
           i2c_write_blocking(i2c1, I2Caddr, (addresses + i), sizeof(uint8_t), false);
           i2c_read_blocking(i2c1, I2Caddr,tmp,2*sizeof(uint8_t), false);
