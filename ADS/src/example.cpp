@@ -32,17 +32,18 @@ int main(){
   gpio_pull_up(4);
   gpio_pull_up(5);
 
-  sleep_ms(1000);
-  printf("===== ===== ===== =====\n");
-
   ads_init(i2c0, 4);
   
   uint8_t chan = 0;
   
-  while(1){
+   while(1){
     ads_read_config(i2c0);
     uint16_t result = ads_read_channel(i2c0, chan);
-    printf("\t ==> \tREAD: %d \t <== \t \n", result);
+    
+    if(chan == 2){
+      printf("\t ==> \tREAD %d: %d \t <== \t \n", chan, result);
+    }
+    
     if(chan<3){
       chan++;
     }
@@ -50,8 +51,7 @@ int main(){
       chan = 0;
     }
     
-    sleep_ms(500);
-    //printf("Hello world!\n");
+    sleep_ms(20);
   }
   
   return 0;
@@ -62,7 +62,7 @@ void ads_init(i2c_inst_t *i2c_port, uint8_t resol){
   i2c_init(i2c_port, 400*1000);
   ads_set_mode(i2c_port, 1);
   ads_set_pga(i2c_port, resol);
-  ads_set_mux(i2c_port, 3);
+  ads_set_mux(i2c_port, 0);
   ads_set_speed(i2c_port, 5);
 }
 
@@ -74,19 +74,18 @@ void ads_read_config(i2c_inst_t *i2c_port){
   
   config = (preConf[0] << 8) | preConf[1];
   
-  printf("Read config: %#04x %#04x - %#06x \n", preConf[0], preConf[1], config);
+  //printf("Read config: %#04x %#04x - %#06x \n", preConf[0], preConf[1], config);
 }
 
 //We're only going to allow single ADC measurements, differential measurements are not necessary
 //This function will get called every time we read from the device
 void ads_set_mux(i2c_inst_t* i2c_port, uint8_t channel){
   uint16_t channelMask = 0x7000;
-  uint16_t channels[4] = {0x4000, 0x5000, 0x6000, 0x7000};
+  //Weird order? My board's A(N) pins were labelled like this.
+  uint16_t channels[4] = {0x5000, 0x6000, 0x7000, 0x4000};
   
   config &= ~channelMask;
   config |= channels[channel];
-  
-  printf("Mux reconfigured!");
   
   ads_write_config(i2c_port, config);
 }
@@ -145,6 +144,9 @@ void ads_set_speed(i2c_inst_t* i2c_port, uint8_t speed){
 }
 
 uint16_t ads_read_channel(i2c_inst_t* i2c_port, uint8_t channel){
+  
+  ads_read_config(i2c0);
+  
   ads_set_mux(i2c_port, channel);
   
   uint8_t res[2];
@@ -166,7 +168,7 @@ void ads_write_config(i2c_inst_t* i2c_port, uint16_t config){
   tmp[1] = (uint8_t)(config >> 8);
   tmp[2] = (uint8_t)(config & 0xff);
   
-  printf("Write config: %#04x %#04x \n", tmp[1], tmp[2]);
+  //printf("Write config: %#04x %#04x \n", tmp[1], tmp[2]);
   
   i2c_write_blocking(i2c_port, I2C_ADDR, tmp, 3, false);
 }
