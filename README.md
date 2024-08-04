@@ -2,6 +2,9 @@
 
 A number of libraries we've made in order to control all the components of any vehicle. All of these are written in C/C++ for the Raspberry Pi Pico and its variations.
 
+## ADS
+A rudimentary driver for the ADS 1115 IC: A 4 channel I²C controlled ADC IC
+
 ## Http-webserver
 Webserver using the lwIP stack for Raspberry Pi Pico W.
 
