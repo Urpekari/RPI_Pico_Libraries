@@ -1,7 +1,6 @@
 project(ADS)
 
 add_executable(ADS
-    #rc/ads1115.c
     src/example.cpp
     )
 

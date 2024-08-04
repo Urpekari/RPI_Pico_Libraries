@@ -8,12 +8,14 @@
 
 //prototypes
 void ads_init(i2c_inst_t *i2c_port, uint8_t resol);
-void ads_read_config(i2c_inst_t *i2c_port);
 void ads_set_mux(i2c_inst_t* i2c_port, uint8_t channel);
 void ads_set_pga(i2c_inst_t * i2c_port, uint8_t resol);
 void ads_set_mode(i2c_inst_t* i2c_port, uint8_t mode);
+void ads_trig_read(i2c_inst_t* i2c_port);
 void ads_set_speed(i2c_inst_t* i2c_port, uint8_t speed);
 void ads_write_config(i2c_inst_t* i2c_port, uint16_t config);
+
+uint16_t ads_read_config(i2c_inst_t *i2c_port);
 uint16_t ads_read_channel(i2c_inst_t* i2c_port, uint8_t channel);
 
 //Hard-coded pointers
@@ -37,21 +39,17 @@ int main(){
   uint8_t chan = 0;
   
    while(1){
-    ads_read_config(i2c0);
     uint16_t result = ads_read_channel(i2c0, chan);
-    
-    if(chan == 2){
-      printf("\t ==> \tREAD %d: %d \t <== \t \n", chan, result);
-    }
+      printf("%8d\t", result);
     
     if(chan<3){
       chan++;
     }
     else{
       chan = 0;
+      printf("\n");
     }
-    
-    sleep_ms(20);
+    sleep_us(150);
   }
   
   return 0;
@@ -67,12 +65,14 @@ void ads_init(i2c_inst_t *i2c_port, uint8_t resol){
 }
 
 //We're assuming there's just one connected, on the i2c bus that we are giving it
-void ads_read_config(i2c_inst_t *i2c_port){
+uint16_t ads_read_config(i2c_inst_t *i2c_port){
   uint8_t preConf[2];
   i2c_write_blocking(i2c_port, I2C_ADDR, &config_ptr, 1, true);
   i2c_read_blocking(i2c_port, I2C_ADDR, preConf, 2, false);
   
   config = (preConf[0] << 8) | preConf[1];
+  
+  return config;
   
   //printf("Read config: %#04x %#04x - %#06x \n", preConf[0], preConf[1], config);
 }
@@ -81,8 +81,15 @@ void ads_read_config(i2c_inst_t *i2c_port){
 //This function will get called every time we read from the device
 void ads_set_mux(i2c_inst_t* i2c_port, uint8_t channel){
   uint16_t channelMask = 0x7000;
-  //Weird order? My board's A(N) pins were labelled like this.
-  uint16_t channels[4] = {0x5000, 0x6000, 0x7000, 0x4000};
+  
+  uint16_t channels[4] = {0x4000, 0x5000, 0x6000, 0x7000};
+  
+  /*IMPORTANT*/
+  /*
+  This works the same way every time, so check this out:
+  First we clear all bits selected by a mask with the &= ~ operator combination
+  Then we binary-or with what we want to write. Bosh! B)
+  */
   
   config &= ~channelMask;
   config |= channels[channel];
@@ -107,7 +114,6 @@ void ads_set_pga(i2c_inst_t* i2c_port, uint8_t resol){
   }
   
   ads_write_config(i2c_port, config);
-  
 }
 
 void ads_set_mode(i2c_inst_t* i2c_port, uint8_t mode){
@@ -116,6 +122,7 @@ void ads_set_mode(i2c_inst_t* i2c_port, uint8_t mode){
   config &= ~modeMask;
   if(mode > 0){
     //Default
+    //Setting the operation mode to be single-fire
     config |= 0x0100;
   }
   
@@ -131,6 +138,14 @@ void ads_set_mode(i2c_inst_t* i2c_port, uint8_t mode){
   ads_write_config(i2c_port, config);
 }
 
+void ads_trig_read(i2c_inst_t* i2c_port){
+  uint16_t readMask = 0x8000;
+  
+  config &= ~readMask;
+  config |= readMask;
+  
+  ads_write_config(i2c_port, config);
+}
 
 void ads_set_speed(i2c_inst_t* i2c_port, uint8_t speed){
   
@@ -145,9 +160,19 @@ void ads_set_speed(i2c_inst_t* i2c_port, uint8_t speed){
 
 uint16_t ads_read_channel(i2c_inst_t* i2c_port, uint8_t channel){
   
-  ads_read_config(i2c0);
-  
+  //Set the desired channel in the input multiplexer
   ads_set_mux(i2c_port, channel);
+  
+  //TODO: Test if this ruins anything in continuous conversion mode
+  //Trigger the reading, only necessary when in single-fire mode
+  ads_trig_read(i2c_port);
+  
+  uint16_t configReg = ads_read_config(i2c0);
+  //If it's not ready to be read from, we just wait
+  while(configReg < 0x8000){
+    configReg = ads_read_config(i2c0);
+    sleep_ms(5);
+  }
   
   uint8_t res[2];
   uint16_t result;
