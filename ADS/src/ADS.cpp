@@ -1,4 +1,4 @@
-//v1.0
+//v1.1
 //2024-08-05
 
 #include <stdio.h>
@@ -159,6 +159,28 @@ uint16_t ADS::ads_read_channel(i2c_inst_t* i2c_port, uint8_t channel){
   result = (res[0] << 8) | res[1];
   
   return result;
+}
+
+uint8_t ADS::readShortChannel(uint8_t channel){
+  return(convertAngle(ads_read_channel(i2c_port, channel)));
+}
+
+//Literally the map function from arduino
+uint8_t ADS::convertAngle(uint16_t receivedPos){
+
+    //receivedPos   : The input value we want to convert
+    //in_min        : Lower limit of all possible inputs
+    //in_max        : Upper limit of all possible inputs
+    //min           : Lower limit of the desired outputs
+    //max           : Upper limit of the desired outputs
+
+    uint8_t min = 0;
+    uint8_t max = 255;
+
+    uint16_t in_min = 0;
+    uint16_t in_max = 26200;
+
+    return(uint8_t)( (receivedPos - in_min) * (max - min) / (in_max - in_min) + min);
 }
 
 void ADS::ads_write_config(i2c_inst_t* i2c_port, uint16_t config){

@@ -14,7 +14,7 @@ int main(void){
   
   while(1){
 
-    printf("%12d\t", ads.readChannel(chan));
+    printf("%12d\t", ads.readShortChannel(chan));
     
     chan++;
     if(chan > 3){

@@ -1,4 +1,4 @@
-//v1.0
+//v1.1
 //2024-08-05
 
 #include <stdio.h>
@@ -33,6 +33,8 @@ class ADS{
         void ads_set_speed(i2c_inst_t* i2c_port, uint8_t speed);
         void ads_write_config(i2c_inst_t* i2c_port, uint16_t config);
         
+        uint8_t convertAngle(uint16_t receivedPos);
+        
         uint16_t ads_read_config(i2c_inst_t *i2c_port);
         uint16_t ads_read_channel(i2c_inst_t* i2c_port, uint8_t channel);
 
@@ -41,6 +43,7 @@ class ADS{
         
         //FUNCS
         uint16_t readChannel(uint8_t channel);
+        uint8_t readShortChannel(uint8_t channel);
 
         ADS(i2c_inst_t* i2c_port, uint8_t SCL, uint8_t SDA);
         ~ADS();
