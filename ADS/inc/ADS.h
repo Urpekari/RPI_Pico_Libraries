@@ -1,5 +1,5 @@
-//v1.2
-//2024-06-23
+//v1.0
+//2024-08-05
 
 #include <stdio.h>
 #include <string.h>
@@ -10,63 +10,40 @@
 #ifndef __ADS_H_
 #define __ADS_H_
 
-  #define 
+#define I2C_ADDR 0x48
 
-  //Joysticks: Cartesian coordinates (X = Horizontal, Y = Vertical)
-  #define LXAddr 0x60
-  #define LYAddr 0x61
-  #define RXAddr 0x62
-  #define RYAddr 0x63
-  
-  //Joysticks: Polar coordinates (P = Angle, R = Radius)
-  #define LPAddr 0x70
-  #define LRAddr 0x72
-  #define RPAddr 0x74
-  #define RRAddr 0x76
-
-  //Auxiliary buttons: 
-  #define PBAddr 0x64
-
-  //We're using the same struct to get both types (cartesian and polar) of coordinates through the getter
-  struct outputs{
-    uint8_t Left0;  //X or Angle
-    uint8_t Left1;  //Y or Radius
-    uint8_t Right0;
-    uint8_t Right1;
-    bool LButton;
-    bool RButton;
-    uint16_t LAngle;
-    uint16_t RAngle;
-    uint16_t LRadius;
-    uint16_t RRadius;
-  };
-
-class JOYC{
+class ADS{
 
     private:
         //VARS
-        uint8_t addresses[10] = {LXAddr, LYAddr, RXAddr, RYAddr, LPAddr, LRAddr, RPAddr, RRAddr, PBAddr};
         
+        //Hard-coded pointers
+        const uint8_t config_ptr = 0x01;
+        const uint8_t conver_ptr = 0x00;
         
-        struct outputs cartesian;
-        struct outputs polar;
+        //Object-wide i2c_port pointer
+        i2c_inst_t* i2c_port;
+
         //FUNCS
-        void update(bool type); // true==polar, false==cartesian
-        void xyzGradient();
-        uint8_t colorRamp(uint8_t potValIn);
+        void ads_init(i2c_inst_t *i2c_port, uint8_t resol);
+        void ads_set_mux(i2c_inst_t* i2c_port, uint8_t channel);
+        void ads_set_pga(i2c_inst_t * i2c_port, uint8_t resol);
+        void ads_set_mode(i2c_inst_t* i2c_port, uint8_t mode);
+        void ads_trig_read(i2c_inst_t* i2c_port);
+        void ads_set_speed(i2c_inst_t* i2c_port, uint8_t speed);
+        void ads_write_config(i2c_inst_t* i2c_port, uint16_t config);
         
-        
+        uint16_t ads_read_config(i2c_inst_t *i2c_port);
+        uint16_t ads_read_channel(i2c_inst_t* i2c_port, uint8_t channel);
 
     public:
         //VARS
-        void drawRGB(uint8_t red, uint8_t green, uint8_t blue);
         
         //FUNCS
-        struct outputs getCartesian();
-        struct outputs getPolar();
-          
-        JOYC(uint8_t i2c, uint8_t SCL, uint8_t SDA);
-        ~JOYC();
+        uint16_t readChannel(uint8_t channel);
+
+        ADS(i2c_inst_t* i2c_port, uint8_t SCL, uint8_t SDA);
+        ~ADS();
 
 };
 

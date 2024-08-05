@@ -2,10 +2,11 @@ project(ADS)
 
 add_executable(ADS
     src/example.cpp
+    src/ADS.cpp
     )
 
 target_include_directories(ADS PUBLIC
-	#inc
+	inc
 )
 
 set(CMAKE_CXX_STANDARD 17)
