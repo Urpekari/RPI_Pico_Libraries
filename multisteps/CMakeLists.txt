@@ -2,7 +2,8 @@ project(multisteps)
 
 add_executable(multisteps
         src/MULTISTEPS.cpp
-        src/example.cpp
+        src/STEPS.cpp
+        src/SHIFTREG.cpp
         )
 
 target_include_directories(multisteps PUBLIC
