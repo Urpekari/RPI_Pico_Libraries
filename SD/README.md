@@ -4,9 +4,9 @@ Create a subdirectory called lib and clone the repository
 
 ## Required modifications
 
-Uncomment commented line in FatFS_SPI/CMakeLists.txt
+1.  Uncomment commented line in FatFS_SPI/CMakeLists.txt
 
-Modify (copy from one place to another) files in FatFS_SPI:
+2.  Modify (copy from one place to another) files in FatFS_SPI:
   
 Required:
 * /source:
