@@ -8,9 +8,9 @@ Uncomment commented line in FatFS_SPI/CMakeLists.txt
 
 Modify (copy from one place to another) files in FatFS_SPI:
   
-  Required:
- * /source:
-   *  00history.txt
+Required:
+* /source:
+  *  00history.txt
   * 00readme.txt
   *  diskio.c
   *  diskio.h
@@ -19,13 +19,13 @@ Modify (copy from one place to another) files in FatFS_SPI:
   *  ffconf.h
   *  ffsystem.c
   *  ffunicode.c
- * /include:
+* /include:
   *  f_util.h
   *  ff_stdio.h
   *  my_debug.h
   *  rtc.h
   *  util.h
- * /sd_driver:
+* /sd_driver:
   *  crc.c
   *  crc.h
   *  demo_logging.c
