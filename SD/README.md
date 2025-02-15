@@ -10,7 +10,7 @@ Modify (copy from one place to another) files in FatFS_SPI:
   
   Required:
  * /source:
-  *  00history.txt
+   *  00history.txt
   * 00readme.txt
   *  diskio.c
   *  diskio.h
