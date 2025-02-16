@@ -41,7 +41,7 @@ void SD::write_to_sd(char buf[1024]){
         printf("ERROR: Could not open file (%d)\r\n", fr);
         while (true);
     }
-    ret = f_printf(&fil,"This text is a test.\n");
+    ret = f_write(&fil,(const void*)buf,(UINT)strlen(buf),&written_bytes);
     if (ret < 0) {
         printf("ERROR: Could not write to file (%d)\r\n", ret);
         f_close(&fil);
@@ -58,6 +58,6 @@ void SD::unmount(){
     f_unmount("0:");
 }
 
-int SD::get_written_bytes(){
+uint SD::get_written_bytes(){
     return SD::written_bytes;
 }
