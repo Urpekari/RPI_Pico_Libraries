@@ -7,7 +7,7 @@
 
 
 int main(){
-    char buf[100];
+    char buf[1024];
     stdio_init_all();
     printf("\r\nSD card test. Press 'enter' to start.\r\n");
     while (true) {
@@ -20,7 +20,10 @@ int main(){
     char *filename, *text;
     strcpy(filename,"test.txt");
     SD sd(filename);
-    strcpy(text,"This text is a test.\n");
-    sd.write_to_sd(text);
+    char letter;
+    letter = getchar();
+    sprintf(buf,"Letter received: %c\n",letter);
+    printf("Text to be written: %s\n",buf);
+    sd.write_to_sd(buf);
     return 0;
 }
