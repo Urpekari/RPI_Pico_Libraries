@@ -16,7 +16,7 @@ class SD{
         FATFS fs;
         FIL fil;
         int ret;
-        int written_bytes;
+        uint written_bytes;
         //FUNCS
         void initialize();
         void mount_drive();
@@ -29,7 +29,7 @@ class SD{
         SD(char *filename);
         SD();
         ~SD();
-        int get_written_bytes();
+        uint get_written_bytes();
         void write_to_sd(char buf[1024]);
 
 };
