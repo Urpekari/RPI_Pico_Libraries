@@ -1,0 +1,8 @@
+Pinout for SD card module
+
+CS-> PIN 22 (SPI0 CSn)
+DI-> PIN 25 (SPI0 TX)
+DO-> PIN 21 (SPI0 RX)
+CLK-> PIN 24 (SPI0 SCK)
+GND-> PIN 38 (GND)
+5V-> PIN 40 (VBUS)
